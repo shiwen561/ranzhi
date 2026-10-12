@@ -2647,9 +2647,9 @@ function ivSaveCase() {
 }
 
 /* ---------------- 学生端预览（可玩） ---------------- */
-var IVP = { q: 0, score: 0, ans: null, flipped: 0, step: 1 };
+var IVP = { q: 0, score: 0, ans: null, flipped: 0, step: 1, matchSel: null, pairs: [] };
 function ivPreview() {
-  IVP = { q: 0, score: 0, ans: null, flipped: 0, step: 1 };
+  IVP = { q: 0, score: 0, ans: null, flipped: 0, step: 1, matchSel: null, pairs: [] };
   openModal({
     title: '预览交互效果 — 学生端答题界面', icon: 'play', width: 640,
     body: '<div id="ivpBody"></div>',
@@ -2679,17 +2679,28 @@ function ivpRender() {
       '<div class="ivp-foot">当前得分：' + IVP.score + ' / 25</div></div>';
   } else if (IVP.step === 3) {
     var pairs = [['LoRA', '低秩分解（r ≪ d）'], ['QLoRA', '量化 + 低秩适配'], ['Prefix-tuning', '前缀向量注入'], ['Adapter', '瓶颈层插入']];
+    var shuf = [1, 0, 3, 2];
+    var lines2 = IVP.pairs.map(function (m) {
+      var ok = m.l === shuf[m.r];
+      var y1 = 34 + m.l * 46, y2 = 34 + m.r * 46;
+      return '<path d="M0 ' + y1 + ' C36 ' + y1 + ' 36 ' + y2 + ' 72 ' + y2 + '" stroke="' + (ok ? '#27AE60' : '#E74C3C') + '" stroke-width="2.5" fill="none"/>';
+    }).join('');
+    var done = IVP.pairs.length >= 4;
     b.innerHTML = '<div class="ivp-stage">' +
-      '<div class="ivp-q">Q2 · 点击左右两侧完成连线匹配<span class="ivp-badge">匹配 · 5 分</span></div>' +
-      '<div class="iv-match" style="max-width:420px;margin:0 auto">' +
-      '<div class="iv-mcol">' + pairs.map(function (p, i) {
-        return '<div class="iv-mitem' + (IVP.ans !== null && i === 0 ? ' ok' : '') + '" onclick="ivpMatch()"><b>' + p[0] + '</b></div>';
+      '<div class="ivp-q">Q2 · 先点左侧术语，再点右侧定义完成连线<span class="ivp-badge">匹配 · 5 分/题</span></div>' +
+      '<div class="iv-match" style="max-width:470px;margin:0 auto;align-items:flex-start">' +
+      '<div class="iv-mcol">' + pairs.map(function (pp, i) {
+        var used = IVP.pairs.some(function (m) { return m.l === i; });
+        var sel = IVP.matchSel === i;
+        return '<div class="iv-mitem' + (sel ? ' ok' : '') + '" style="' + (sel ? 'border-color:#2E5496;background:#EAF1FB;' : '') + (used ? 'opacity:.4' : '') + '" onclick="ivpMatchL(' + i + ')"><b>' + pp[0] + '</b></div>';
       }).join('') + '</div>' +
-      '<div class="iv-mcol">' + [1, 0, 3, 2].map(function (x, i) {
-        return '<div class="iv-mitem def' + (IVP.ans !== null && i === 0 ? ' ok' : '') + '" onclick="ivpMatch()"><span>' + pairs[x][1] + '</span></div>';
+      '<svg style="flex:none;width:72px;height:200px" viewBox="0 0 72 200">' + lines2 + '</svg>' +
+      '<div class="iv-mcol">' + shuf.map(function (x, i) {
+        return '<div class="iv-mitem def" onclick="ivpMatchR(' + i + ')"><span>' + pairs[x][1] + '</span></div>';
       }).join('') + '</div></div>' +
-      (IVP.ans !== null ? '<div class="result mt12" style="margin:12px 0 0"><div class="rh">' + icon('ok', 16) + '匹配正确 +5 分（自动评分：文字 / 容器评分对象）</div></div>' +
-        '<div class="row mt12" style="justify-content:center"><button class="btn btn-primary" onclick="IVP.step=4;ivpRender()">查看结算' + icon('right', 14) + '</button></div>' : '') +
+      (done ? '<div class="result mt12" style="margin:12px 0 0"><div class="rh">' + icon('ok', 16) + '连线已提交，自动评分（文字 / 容器评分对象）</div></div>' +
+        '<div class="row mt12" style="justify-content:center"><button class="btn btn-primary" onclick="IVP.step=4;ivpRender()">查看结算' + icon('right', 14) + '</button></div>' :
+        '<div class="small muted mt10" style="text-align:center">' + (IVP.matchSel === null ? '① 先点击左侧一个术语' : '② 已选「' + pairs[IVP.matchSel][0] + '」，再点击右侧对应定义') + '</div>') +
       '<div class="ivp-foot">当前得分：' + IVP.score + ' / 25</div></div>';
   } else {
     b.innerHTML = '<div class="ivp-stage" style="text-align:center">' +
@@ -2707,8 +2718,19 @@ function ivpAns(k) {
   ivpRender();
   toast(k === 'A' ? '回答正确 +5 分（自动评分）' : '回答错误：' + IV.scoring['ABCD'.indexOf(k)].fb, k === 'A' ? 'ok' : 'warn');
 }
-function ivpMatch() {
-  if (IVP.ans === null) { IVP.ans = 1; IVP.score += 5; ivpRender(); toast('连线匹配正确 +5 分（容器评分对象自动评分）'); }
+function ivpMatchL(i) {
+  if (IVP.pairs.some(function (m) { return m.l === i; })) { toast('该术语已连线', 'warn'); return; }
+  IVP.matchSel = i; ivpRender();
+}
+function ivpMatchR(i) {
+  if (IVP.matchSel === null) { toast('请先点击左侧术语', 'warn'); return; }
+  var shuf = [1, 0, 3, 2];
+  var ok = IVP.matchSel === shuf[i];
+  IVP.pairs.push({ l: IVP.matchSel, r: i });
+  if (ok) IVP.score += 5;
+  IVP.matchSel = null;
+  toast(ok ? '连线正确 +5 分（容器评分对象自动评分）' : '连线错误：已用红色标出', ok ? 'ok' : 'err');
+  ivpRender();
 }
 
 </script>
