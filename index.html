@@ -1387,14 +1387,14 @@ function addAct(ci, ui, pi) {
       '<div class="tab' + (STATE.addTab !== 'mt' ? ' active' : '') + '" onclick="STATE.addTab=\'act\';addAct(' + ci + ',' + ui + ',' + pi + ')">课程活动（' + DB.actTypes.length + ' 种）</div>' +
       '<div class="tab' + (STATE.addTab === 'mt' ? ' active' : '') + '" onclick="STATE.addTab=\'mt\';addAct(' + ci + ',' + ui + ',' + pi + ')">微训练（19 种思维工具）</div></div>' +
       (STATE.addTab === 'mt'
-        ? '<div class="small muted mt12 mb12">按招标文件原文内置 19 种微训练思维工具模板，点击即添加到该段落（编辑内容实时保存）</div>' +
+        ? '<div class="small muted mt12 mb12">内置 19 种微训练思维工具模板，点击即添加到该段落（编辑内容实时保存）</div>' +
         '<div class="col" style="gap:8px">' + DB.microTrainings.map(function (t) {
           return '<div class="tool-card" style="text-align:left;display:flex;align-items:center;gap:12px;padding:10px 14px" onclick="doAddAct(' + ci + ',' + ui + ',' + pi + ',\'' + t.n + '\',1)">' +
             '<div class="ic" style="width:38px;height:38px;margin:0;flex:none">' + icon('target', 18) + '</div>' +
             '<div><div class="t" style="text-align:left">' + t.n + '</div><div class="d" style="text-align:left;height:auto">' + t.d + '</div></div>' +
             '<span style="margin-left:auto;color:var(--brand3)">' + icon('plus', 16) + '</span></div>';
         }).join('') + '</div>'
-        : '<div class="small muted mt12 mb12">含招标文件 45 分演示项 16 种 + 第五章采购需求 15 种，取并集共 ' + DB.actTypes.length + ' 种；点击即添加到该段落（编辑内容实时保存）</div><div class="grid g4">' +
+        : '<div class="small muted mt12 mb12">共 ' + DB.actTypes.length + ' 种；点击即添加到该段落（编辑内容实时保存）</div><div class="grid g4">' +
         DB.actTypes.map(function (t) {
           return '<div class="tool-card" onclick="doAddAct(' + ci + ',' + ui + ',' + pi + ',\'' + t + '\',0)"><div class="ic">' + icon(ACT_ICON[t] || 'doc', 20) + '</div><div class="t">' + t + '</div></div>';
         }).join('') + '</div>'),
@@ -2260,7 +2260,7 @@ var RES_NEW_TYPES = [
 function newRes() {
   openModal({
     title: '新建资源', icon: 'plus', width: 660,
-    body: '<div class="small muted mb12">按招标文件：支持创建实训资源包、文件夹、作业、测试、调查问卷、主题讨论以及交互式练习</div>' +
+    body: '<div class="small muted mb12">支持创建实训资源包、文件夹、作业、测试、调查问卷、主题讨论以及交互式练习</div>' +
       '<div class="grid" style="grid-template-columns:repeat(2,1fr);gap:10px">' + RES_NEW_TYPES.map(function (t) {
         return '<div class="tool-card" onclick="doNewRes(\'' + t.n + '\')"><div class="ic">' + icon(t.i, 20) + '</div>' +
           '<div class="t">' + t.n + '</div><div class="xs muted mt4">' + t.d + '</div></div>';
@@ -2620,7 +2620,7 @@ function ivTplLib() {
     body: '<div class="grid g2 mb12">' +
       '<div style="background:var(--brand-light);border-radius:10px;padding:14px;text-align:center"><div class="b" style="font-size:22px;color:var(--brand)">' + total + '+</div><div class="small muted">事件模板（6 大类）</div></div>' +
       '<div style="background:#E8F8EF;border-radius:10px;padding:14px;text-align:center"><div class="b" style="font-size:22px;color:#1E8449">' + ctotal + '+</div><div class="small muted">组件（5 大类）</div></div></div>' +
-      '<div class="small b brand-c mb8">事件模板分类（按招标文件）</div>' +
+      '<div class="small b brand-c mb8">事件模板分类</div>' +
       Object.keys(IV_TPL).map(function (k) {
         return '<div class="iv-librow"><b>' + k + '</b><span>' + IV_TPL[k].join('、') + '</span></div>';
       }).join('') +
@@ -3175,7 +3175,7 @@ var TOOLCFG = {
       '<div class="ita-theorybox"><div class="row wrap" style="gap:5px">' + DB.theories.map(function (x, i) {
         return '<label class="chip' + (i === 1 || i === 5 ? ' active' : '') + '" style="height:24px;font-size:11px" data-check="theory" onclick="this.classList.toggle(\'active\')">' + x + '</label>';
       }).join('') + '</div></div></div>' +
-      '<div class="xs muted mt8">已按招标文件内置 33 种教学理论；所选理论将直接驱动教案的教学过程结构</div>',
+      '<div class="xs muted mt8">已内置 33 种教学理论；所选理论将直接驱动教案的教学过程结构</div>',
     run: function (m) {
       var topic = ($('#pTopic', m) || {}).value || '本节内容';
       var hour = ($('#pHour', m) || {}).value || '2';
@@ -3205,7 +3205,7 @@ var TOOLCFG = {
       return '<label class="chip' + (i === 1 ? ' active' : '') + '" data-radio="tone" onclick="pickRadio(\'tone\',this)">' + x + '</label>';
     }).join('') + '</div></div>' +
       '<div class="field mt16"><label>配音音色</label><select class="inp" id="mVoice">' + DB.voices.map(function (v) { return '<option>' + v + '</option>'; }).join('') + '</select>' +
-      '<div class="xs muted mt4">按招标文件内置：绅士青年 / 雄浑播音 / 抒情嗓音 / 电台主持 / 诚恳大人 / 和蔼长者 / Reserved Young Man / Wise Lady</div></div>' +
+      '<div class="xs muted mt4">可选音色：绅士青年 / 雄浑播音 / 抒情嗓音 / 电台主持 / 诚恳大人 / 和蔼长者 / Reserved Young Man / Wise Lady</div></div>' +
       '<div class="field mt16"><label>教学理念（' + DB.microIdeas.length + '+ 种，可多选）</label>' +
       '<div class="ita-theorybox"><div class="row wrap" style="gap:5px">' + DB.microIdeas.map(function (x, i) {
         return '<label class="chip' + (i === 11 || i === 12 ? ' active' : '') + '" style="height:24px;font-size:11px" data-check="idea" onclick="this.classList.toggle(\'active\')">' + x + '</label>';
@@ -3213,7 +3213,7 @@ var TOOLCFG = {
       '<div class="field mt16"><label>微课互动组件（生成后可插入，' + DB.microInteracts.length + ' 种）</label><div class="row wrap" style="gap:6px">' + DB.microInteracts.map(function (x, i) {
         return '<label class="chip' + (i < 4 ? ' active' : '') + '" data-check="minter" onclick="this.classList.toggle(\'active\')">' + x + '</label>';
       }).join('') + '</div>' +
-      '<div class="xs muted mt4">按招标文件：微课中可插入签到、讨论、投票、词云、结构化反思、图片瀑布流、随堂测试、列表排序、连线匹配等互动</div></div>' +
+      '<div class="xs muted mt4">微课中可插入签到、讨论、投票、词云、结构化反思、图片瀑布流、随堂测试、列表排序、连线匹配等互动</div></div>' +
       '<div class="field mt16"><label>微课主题</label><input class="inp" id="mTopic" value="什么是 LoRA 微调"></div>',
     run: function (m) {
       var idea = $$('[data-check="idea"]', m).filter(function (e) { return e.classList.contains('active'); }).map(function (e) { return e.textContent; });
@@ -3990,7 +3990,7 @@ function mobilePreview() {
   var e = DB.exams[0];
   openModal({
     title: '试卷移动端界面浏览', icon: 'msg', width: 620,
-    body: '<div class="small muted mb12">招标文件要求：试卷支持移动端界面浏览（学生手机端答题视图）</div>' +
+    body: '<div class="small muted mb12">试卷支持移动端界面浏览（学生手机端答题视图）</div>' +
       '<div style="display:flex;justify-content:center;background:#F5F7FA;border-radius:14px;padding:18px">' +
       '<div style="width:280px;background:#fff;border:10px solid #1F2937;border-radius:26px;overflow:hidden;box-shadow:0 8px 26px rgba(15,23,42,.22)">' +
       '<div style="background:var(--brand);color:#fff;padding:10px 14px;font-size:12px" class="row">' +
