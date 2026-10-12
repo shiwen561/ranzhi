@@ -3439,6 +3439,8 @@ window.runTool = function (k) {
 </script>
 
 <script>
+/* 班级邀请二维码（真实可扫） */
+var STU_QR = 'data:image/png;base64,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';
 /* ===================== 页面5：学生名册与画像 ===================== */
 var PAGE_SIZE = 20;
 STATE.stuPage = 1; STATE.stuKw = ''; STATE.stuTag = '';
@@ -3453,7 +3455,8 @@ PAGES.students = {
       '<div class="row" style="gap:8px">' +
       '<select class="tb-select" style="height:34px"><option>计算机2301班</option><option>计算机2302班</option><option>人工智能2301班</option></select>' +
       '<button class="btn btn-ghost" onclick="toast(\'学生名册已导出为 Excel（200 条）\')">' + icon('export', 15) + '导出 Excel</button>' +
-      '<button class="btn btn-primary" onclick="addStudent()">' + icon('userplus', 15) + '添加学生</button></div></div>' +
+      '<button class="btn btn-ghost" onclick="stuInviteQR()">' + icon('share', 15) + '班级二维码</button>' +
+'<button class="btn btn-primary" onclick="addStudent()">' + icon('userplus', 15) + '添加学生</button></div></div>' +
 
       '<div class="card"><div class="cb">' +
       '<div class="between mb12">' +
@@ -3537,6 +3540,23 @@ function saveTag(i) {
   var nt = ($('#newTag') || {}).value; if (nt && nt.trim()) sel.push(nt.trim());
   DB.students[i].tags = sel;
   closeModal(); toast('已更新 ' + DB.students[i].name + ' 的标签'); renderStu();
+}
+function stuInviteQR() {
+  openModal({
+    title: '班级邀请二维码', icon: 'share', width: 460,
+    body: '<div style="text-align:center;padding:8px 4px">' +
+      '<div style="display:inline-block;padding:14px;border:1px solid var(--line);border-radius:14px;background:#fff">' +
+      '<img src="' + STU_QR + '" style="width:220px;height:220px;display:block"></div>' +
+      '<div class="b mt12" style="font-size:15px">计算机2301班 · AIGC 实训</div>' +
+      '<div class="small muted mt4">微信 / 钉钉 / 学习通 扫码自助加入班级</div>' +
+      '<div class="row mt12" style="justify-content:center;gap:10px">' +
+      '<div class="card" style="padding:8px 16px"><div class="xs muted">邀请码</div><div class="b" style="font-size:18px;color:var(--brand)">CS2301</div></div>' +
+      '<div class="card" style="padding:8px 16px"><div class="xs muted">已加入</div><div class="b" style="font-size:18px;color:var(--brand)">200 / 60</div></div>' +
+      '<div class="card" style="padding:8px 16px"><div class="xs muted">有效期</div><div class="b" style="font-size:18px;color:var(--brand)">7 天</div></div></div>' +
+      '<div class="small muted mt12">二维码每节课可刷新 · 学生注册后自动进入本名册</div></div>',
+    footer: '<button class="btn btn-ghost" data-close>关闭</button>' +
+      '<button class="btn btn-primary btn-sm" onclick="toast(\'二维码已刷新（新有效期 7 天）\')">刷新二维码</button>'
+  });
 }
 function addStudent() {
   openModal({
