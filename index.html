@@ -1574,8 +1574,8 @@ function cwElHtml(e) {
   var inner = '';
   if (e.type === 'title') inner = '<div class="cwe-title" style="' + (e.fs ? 'font-size:' + e.fs + 'px;' : '') + (e.col ? 'color:' + e.col + ';' : '') + (e.bold ? 'font-weight:800;' : '') + '">' + esc(e.text) + '</div>';
   else if (e.type === 'text' || e.type === 'textin' || e.type === 'textarea') inner = '<div class="cwe-text">' + esc(e.text || '双击编辑文本内容…') + '</div>';
-  else if (e.type === 'img') inner = '<div class="cwe-imgph"><div>' + icon('img', 30) + '</div><div>配图 · LoRA 旁路结构示意图</div></div>';
-  else if (e.type === 'icon') inner = '<div class="cwe-iconph">' + icon('star', 34) + '<span>图标</span></div>';
+  else if (e.type === 'img') inner = e.img ? '<img src="' + e.img + '" style="width:100%;height:100%;object-fit:cover;border-radius:6px">' : '<div class="cwe-imgph"><div>' + icon('img', 30) + '</div><div>配图 · LoRA 旁路结构示意图</div></div>';
+  else if (e.type === 'icon') inner = e.src ? '<img src="' + e.src + '" style="width:48px;height:48px;display:block;margin:0 auto">' : '<div class="cwe-iconph">' + icon('star', 34) + '<span>图标</span></div>';
   else if (e.type === 'chart' || e.type === 'kchart') inner = '<div class="cwe-chartph"><div class="row" style="justify-content:center;gap:6px">' + ['冻结权重', 'A 矩阵', 'B 矩阵', 'ΔW 输出'].map(function (s, i) {
     return '<span style="background:' + ['#1F3864', '#2E5496', '#5B9BD5', '#27AE60'][i] + ';color:#fff;font-size:11px;padding:4px 9px;border-radius:6px">' + s + '</span>';
   }).join('') + (function () { var arr = ''; for (var i = 0; i < 3; i++) arr += '<span style="color:#C3CBD8">' + icon('right', 13) + '</span>'; return arr; })() + '</div><div class="xs muted mt8">流程图模板 · 可在图表库中更换（50+ 模板）</div></div>';
@@ -1855,8 +1855,8 @@ function cwImgLib() {
     body: '<div class="row wrap mb12" style="gap:6px">' + cats.map(function (c, i) {
       return '<label class="chip' + (i === 1 ? ' active' : '') + '">' + c + '</label>';
     }).join('') + '<span class="small muted" style="margin-left:auto">共 <b class="brand-c">236</b> 张</span></div>' +
-      '<div class="grid" style="grid-template-columns:repeat(5,1fr);gap:10px">' +
-      (function () { var h = ''; for (var i = 0; i < 15; i++) h += '<div style="aspect-ratio:4/3;border-radius:8px;background:' + grads[i % 7] + ';display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;cursor:pointer;transition:.2s" onclick="cwPickImg(' + i + ')">素材 #' + (100 + i) + '</div>'; return h; })() +
+      '<div class="grid" style="grid-template-columns:repeat(6,1fr);gap:8px">' +
+      (function () { var h = ''; for (var i = 0; i < 24; i++) h += '<img src="https://picsum.photos/seed/rz' + i + '/360/270" loading="lazy" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:8px;cursor:pointer;border:2px solid transparent;transition:.15s" onmouseover="this.style.borderColor=\'#5B9BD5\'" onmouseout="this.style.borderColor=\'transparent\'" onclick="cwPickImg(' + i + ')">'; return h; })() +
       '</div>' +
       '<div class="dropzone mt16" onclick="toast(\'已选择本地图片并插入画布\')">' + icon('upload', 30) + '<div class="b small">本地上传图片（jpg / png / gif）</div></div>',
     footer: '<button class="btn btn-ghost" data-close>取消</button>'
@@ -1864,12 +1864,13 @@ function cwImgLib() {
 }
 function cwPickImg(i) {
   closeModal();
-  var e = { id: CW.nextId++, page: CW.page, type: 'img', x: 120, y: 140, w: 260, h: 170 };
+  var e = { id: CW.nextId++, page: CW.page, type: 'img', x: 120, y: 140, w: 260, h: 170, img: 'https://picsum.photos/seed/rz' + i + '/520/340' };
   CW.els.push(e); CW.sel = e.id;
   cwAutoSave('已插入图片素材 #' + (100 + i)); cwRerender();
 }
 
 /* ---------------- 图标库（1000+） ---------------- */
+var ICON_SET = ['account','book-open','cog','brain','lightning-bolt','database','cloud','server','chip','language-python','chart-line','camera','image','music-note','movie','map','school','briefcase','lightbulb','paw','city','rocket','robot','memory','developer-board','language-javascript','math-integral','currency-usd','target','shield-check','web','clock-outline','format-list-checks','share-variant','star','gesture-tap-button'];
 function cwIconLib() {
   var cats = [['logo', '品牌'], ['常用', '常用'], ['符号', '符号'], ['文件', '文件'], ['学科', '学科']];
   var names = Object.keys(ICONS);
@@ -1878,16 +1879,16 @@ function cwIconLib() {
     body: '<div class="row wrap mb12" style="gap:6px">' + cats.map(function (c, i) {
       return '<label class="chip' + (i === 1 ? ' active' : '') + '">' + c[1] + '</label>';
     }).join('') + '<span class="small muted" style="margin-left:auto">共 <b class="brand-c">1,086</b> 个 · 5 大分类</span></div>' +
-      '<div class="grid" style="grid-template-columns:repeat(8,1fr);gap:8px">' +
-      names.slice(0, 24).map(function (n) {
-        return '<div class="cw-iconcell" onclick="cwPickIcon(\'' + n + '\')">' + icon(n, 22) + '</div>';
+      '<div class="grid" style="grid-template-columns:repeat(8,1fr);gap:8px;max-height:340px;overflow-y:auto">' +
+      ICON_SET.map(function (n) {
+        return '<div class="cw-iconcell" onclick="cwPickIcon(\'' + n + '\')" title="' + n + '"><img src="https://api.iconify.design/mdi/' + n + '.svg?width=24&color=%231F3864" style="width:24px;height:24px"></div>';
       }).join('') + '</div>',
     footer: '<button class="btn btn-ghost" data-close>取消</button>'
   });
 }
 function cwPickIcon(n) {
   closeModal();
-  var e = { id: CW.nextId++, page: CW.page, type: 'icon', x: 150, y: 150, w: 120, h: 110, text: n };
+  var e = { id: CW.nextId++, page: CW.page, type: 'icon', x: 150, y: 150, w: 120, h: 110, text: n, src: 'https://api.iconify.design/mdi/' + n + '.svg?width=48&color=%231F3864' };
   CW.els.push(e); CW.sel = e.id;
   cwAutoSave('已插入图标：' + n); cwRerender();
 }
