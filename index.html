@@ -787,7 +787,7 @@ window.DB = (function () {
     { n: '提示词工程实战.pptx', t: 'PPT', s: '11MB', d: '2026-09-22', f: '课件PPT' },
     { n: 'AI学工系统架构讲解.pptx', t: 'PPT', s: '18MB', d: '2026-09-18', f: '课件PPT' },
     { n: '微调实训视频.mp4', t: '视频', s: '120MB', d: '2026-09-25', f: '微课视频' },
-    { n: '推理服务上线演示.mp4', t: '视频', s: '86MB', d: '2026-09-20', f: '微课视频' },
+    { n: '推理服务上线实操.mp4', t: '视频', s: '86MB', d: '2026-09-20', f: '微课视频' },
     { n: '案例一：AI学工系统.docx', t: '文档', s: '2MB', d: '2026-09-28', f: '教学案例库' },
     { n: '案例二：AI党建知识库.docx', t: '文档', s: '1.8MB', d: '2026-09-26', f: '教学案例库' },
     { n: '案例三：复杂条件判断.docx', t: '文档', s: '2.4MB', d: '2026-09-24', f: '教学案例库' },
@@ -1037,7 +1037,7 @@ window.draw = function (id, option) {
   var el = document.getElementById(id);
   if (!el) return;
   if (typeof echarts === 'undefined') {
-    el.innerHTML = '<div class="empty" style="padding:30px 0">' + icon('chart', 40) + '<div>ECharts 资源未加载（离线环境）<br/>图表数据在演示环境可正常渲染</div></div>';
+    el.innerHTML = '<div class="empty" style="padding:30px 0">' + icon('chart', 40) + '<div>图表加载失败，请刷新页面重试</div></div>';
     return;
   }
   if (_charts[id]) { try { _charts[id].dispose(); } catch (e) { } }
@@ -1985,7 +1985,7 @@ function cwPickFormula() {
 function cwVideoInsert() {
   openModal({
     title: '插入视频', icon: 'video', width: 600,
-    body: '<div class="field"><label>视频资源链接（mp4 / 平台资源库）</label><input class="inp" value="/assets/media/lora-deploy.mp4"></div>' +
+    body: '<div class="field"><label>视频资源链接（mp4 / 平台资源库）</label><input class="inp" placeholder="粘贴视频链接，或点击下方从资源库选择"></div>' +
       '<div class="field mt16"><label>视频网站嵌入代码</label><textarea class="inp" rows="3" placeholder="粘贴 bilibili / 学习通等平台的 iframe 嵌入代码">&lt;iframe src="https://player.bilibili.com/player.html?bvid=BV1xx411c7mD"&gt;&lt;/iframe&gt;</textarea></div>' +
       '<div class="small muted mt12">两种方式均支持：资源链接直接播放；嵌入代码自动适配比例</div>',
     footer: '<button class="btn btn-ghost" data-close>取消</button><button class="btn btn-primary" onclick="cwPickMedia(\'video\')">插入到课件</button>'
@@ -1994,7 +1994,7 @@ function cwVideoInsert() {
 function cwAudioInsert() {
   openModal({
     title: '插入音频', icon: 'video', width: 560,
-    body: '<div class="field"><label>音频资源链接 / 平台录音</label><input class="inp" value="/assets/media/lora-intro.mp3"></div>' +
+    body: '<div class="field"><label>音频资源链接 / 平台录音</label><input class="inp" placeholder="粘贴音频链接，或使用平台录音"></div>' +
       '<div class="mt16" style="background:#F8FBFF;border:1px solid #D9E6F7;border-radius:8px;padding:14px"><div class="row"><button class="btn btn-primary btn-sm" onclick="toast(\'音频试播中…\')">' + icon('play', 13) + '试听</button><div class="bar sp" style="margin-left:12px"><i style="width:38%"></i></div><span class="small muted">01:42 / 04:30</span></div></div>',
     footer: '<button class="btn btn-ghost" data-close>取消</button><button class="btn btn-primary" onclick="cwPickMedia(\'audio\')">插入到课件</button>'
   });
