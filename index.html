@@ -1848,12 +1848,12 @@ function cwAutoSave(msg) {
 
 /* ---------------- 图片库（200+，含本地上传） ---------------- */
 function cwImgLib() {
-  var cats = ['自然', '科技', '商务', '创意', '城市', '人像', '动物'];
+  var cats = ['全部', '自然', '科技', '商务', '创意', '城市', '人像', '动物'];
   var grads = ['linear-gradient(135deg,#7FB3E3,#1F3864)', 'linear-gradient(135deg,#5B9BD5,#2E5496)', 'linear-gradient(135deg,#A9C7EA,#5B9BD5)', 'linear-gradient(135deg,#34495E,#5B9BD5)', 'linear-gradient(135deg,#E67E22,#F5B041)', 'linear-gradient(135deg,#27AE60,#A8DCC8)', 'linear-gradient(135deg,#E74C3C,#F5B041)'];
   openModal({
     title: '图片素材库（不少于 200 张，支持本地上传）', icon: 'img', width: 780,
     body: '<div class="row wrap mb12" style="gap:6px">' + cats.map(function (c, i) {
-      return '<label class="chip' + (i === 1 ? ' active' : '') + '">' + c + '</label>';
+      return '<label class="chip' + (i === 0 ? ' active' : '') + '">' + c + '</label>';
     }).join('') + '<span class="small muted" style="margin-left:auto">共 <b class="brand-c">236</b> 张</span></div>' +
       '<div class="grid" style="grid-template-columns:repeat(6,1fr);gap:8px">' +
       (function () { var h = ''; for (var i = 0; i < 24; i++) h += '<img src="https://picsum.photos/seed/rz' + i + '/360/270" loading="lazy" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:8px;cursor:pointer;border:2px solid transparent;transition:.15s" onmouseover="this.style.borderColor=\'#5B9BD5\'" onmouseout="this.style.borderColor=\'transparent\'" onclick="cwPickImg(' + i + ')">'; return h; })() +
